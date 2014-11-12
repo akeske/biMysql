@@ -2,7 +2,7 @@
 
 class Musician{
 
-    private $db_connection = null;
+    public $db_connection = null;
 
     public $errors = array();
 
@@ -10,7 +10,7 @@ class Musician{
 
     public function __construct(){
         if (isset($_POST["insertMusician"])) {
-            $this->inserMusician();
+            $this->insertMusician();
         }
     }
     
@@ -21,7 +21,7 @@ class Musician{
 		}
 	}
 
-    private function inserMusician(){
+    private function insertMusician(){
         if (empty($_POST['name'])) {
             $this->errors[] = "Username field was empty.";
         } elseif (empty($_POST['telephone'])) {
@@ -29,6 +29,7 @@ class Musician{
         } elseif (empty($_POST['salary']) ){
 			$this->errors[] = "Salary field is empty";
 		} else {
+			$this->connect();
 			if (!$this->db_connection->connect_errno) {
                 $name = $this->db_connection->real_escape_string($_POST['name']);
                 	$parts = explode ('/' , $_POST['validStart']);
@@ -38,13 +39,13 @@ class Musician{
 					$validStart=$day.$month.$year."000000";
                 $sql = "INSERT INTO musician
 						(id, musician_id, name, telephone, salary, valid_start, valid_end, trans_start, trans_end) VALUES
-						(NULL, '2', '".$user."', '".$_POST['telephone']."', '".$_POST['salary']."', '".$validStart."', NULL, CURRENT_TIMESTAMP, NULL);";
+						(NULL, '2', '".$name."', '".$_POST['telephone']."', '".$_POST['salary']."', '".$validStart."', NULL, CURRENT_TIMESTAMP, NULL);";
                 $result_insert_musician = $this->db_connection->query($sql);
 				
 				if ($result_insert_musician) {
-					 $this->messages[] = "New musician has id: " . mysqli_insert_id($con);
+					 $this->messages[] = "New musician has id: " . $this->db_connection->insert_id;
 				}else{
-					$this->errors[] =  "Error: " . $sql . "<br>" . mysqli_error($conn);
+					$this->errors[] =  "Error: " . $sql . "<br>" . mysqli_error($this->db_connection);
 				}
 				
 				$this->db_connection->close();
