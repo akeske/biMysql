@@ -95,7 +95,7 @@ Table Style - This is what you want
 	color: #bd5a35;
 	text-decoration:underline;
 }
-#table1 {
+#table1, #table2 {
 	font-family:Arial, Helvetica, sans-serif;
 	color:#666;
 	font-size:12px;
@@ -136,7 +136,7 @@ Table Style - This is what you want
 	-webkit-border-top-right-radius:3px;
 	border-top-right-radius:3px;
 }
-#table1 tr{
+#table1 tr, table2 tr{
 	text-align: center;
 	padding-left:20px;
 }
@@ -145,7 +145,7 @@ Table Style - This is what you want
 	padding-left:20px;
 	border-left: 0;
 }
-#table1 tr td {
+#table1 tr td, #table2 tr td {
 	padding:12px;
 	border-top: 1px solid #ffffff;
 	border-bottom:1px solid #e0e0e0;

@@ -1,6 +1,0 @@
-<?php
-
-define("DB_HOST", "127.0.0.1");
-define("DB_NAME", "root");
-define("DB_USER", "1234");
-define("DB_PASS", "mysql");

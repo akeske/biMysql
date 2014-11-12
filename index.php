@@ -9,12 +9,17 @@
 
 	require_once("classes/Login.php");
 	$login = new Login();
+	
+
 ?>
 <html>
 	<head>
 		<link rel="stylesheet" href="css/buttons.css">
 		<link rel="stylesheet" href="css/forms.css">
 		<link rel="stylesheet" href="css/tables.css">
+		
+		<link rel="stylesheet" type="text/css" href="css/tcal.css" />
+		<script type="text/javascript" src="js/tcal.js"></script>
 	</head>
 	<body>
 		<table id="mainTable">
@@ -31,12 +36,8 @@
 			
 				<td>
 					<fieldset id="fieldset">
-						<legend>Teachers</legend>
-						<table cellspacing='0' id="table1">
-							<tr><th>Task Details</th><th>Progress</th><th>Vital Task</th></tr>
-							<tr><td>Create pretty table design</td><td>100%</td><td>Yes</td></tr>
-							<tr class='even'><td>Take the dog for a walk</td><td>100%</td><td>Yes</td></tr>
-						</table>
+						<legend>Musician</legend>
+						<?php include("views/musician.php"); ?>
 					</fieldset>
 				</td>
 			</tr>

@@ -32,7 +32,7 @@ class Registration{
             && !empty($_POST['user_password_new'])
             && !empty($_POST['user_password_repeat'])
             && ($_POST['user_password_new'] === $_POST['user_password_repeat'])
-        )else{
+        ) {
             $this->db_connection = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
 
             if (!$this->db_connection->set_charset("utf8")) {
