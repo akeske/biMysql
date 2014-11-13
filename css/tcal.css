@@ -17,6 +17,7 @@ background-image: url('../img/no_cal.gif');
 }
 /* container of calendar's pop-up */
 #tcal {
+overflow:hidden;
 position: absolute;
 visibility: hidden;
 z-index: 100;

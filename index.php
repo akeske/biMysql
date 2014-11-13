@@ -14,6 +14,7 @@
 ?>
 <html>
 	<head>
+		<title>Temporal database</title>
 		<link rel="stylesheet" href="css/buttons.css">
 		<link rel="stylesheet" href="css/forms.css">
 		<link rel="stylesheet" href="css/tables.css">
@@ -32,6 +33,9 @@
 						include("views/not_logged_in.php");
 					}
 					?>
+					<form method="post" action=" " onSubmit="window.location.reload()">
+						<input type="button" value="Refresh page" class="pure-button pure-button-primary">
+					</form>
 				</td>
 			
 				<td>
@@ -46,11 +50,7 @@
 				<td>
 					<fieldset id="fieldset">
 						<legend>Students</legend>
-						<table cellspacing='0' id="table1">
-							<tr><th>Task Details</th><th>Progress</th><th>Vital Task</th></tr>
-							<tr><td>Create pretty table design</td><td>100%</td><td>Yes</td></tr>
-							<tr class='even'><td>Take the dog for a walk</td><td>100%</td><td>Yes</td></tr>
-						</table>
+						<?php include("views/musician.php"); ?>
 					</fieldset>
 				</td>
 			</tr>
@@ -59,11 +59,7 @@
 				<td>
 					<fieldset id="fieldset">
 						<legend>Instruments</legend>
-						<table cellspacing='0' id="table1">
-							<tr><th>Task Details</th><th>Progress</th><th>Vital Task</th></tr>
-							<tr><td>Create pretty table design</td><td>100%</td><td>Yes</td></tr>
-							<tr class='even'><td>Take the dog for a walk</td><td>100%</td><td>Yes</td></tr>
-						</table>
+						<?php include("views/musician.php"); ?>
 					</fieldset>
 				</td>
 			</tr>
