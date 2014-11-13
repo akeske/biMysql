@@ -26,9 +26,7 @@ class Musician{
             $this->errors[] = "Username field was empty.";
         } elseif (empty($_POST['telephone'])) {
             $this->errors[] = "Telephone field was empty.";
-        } elseif (empty($_POST['salary']) ){
-			$this->errors[] = "Salary field is empty";
-		} else {
+        } else {
 			$this->connect();
 			if (!$this->db_connection->connect_errno) {
                 $name = $this->db_connection->real_escape_string($_POST['name']);
@@ -38,8 +36,8 @@ class Musician{
 					$year=$parts[0];
 					$validStart=$day.$month.$year."000000";
                 $sql = "INSERT INTO musician
-						(id, musician_id, name, telephone, salary, valid_start, valid_end, trans_start, trans_end) VALUES
-						(NULL, '2', '".$name."', '".$_POST['telephone']."', '".$_POST['salary']."', '".$validStart."', NULL, CURRENT_TIMESTAMP, NULL);";
+						(id, musician_id, name, telephone, valid_start, valid_end, trans_start, trans_end) VALUES
+						(NULL, '2', '".$name."', '".$_POST['telephone']."', '".$validStart."', NULL, CURRENT_TIMESTAMP, NULL);";
                 $result_insert_musician = $this->db_connection->query($sql);
 				
 				if ($result_insert_musician) {
