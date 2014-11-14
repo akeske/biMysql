@@ -23,6 +23,10 @@ class Musician{
 			$this->errors[] = $this->db_connection->error;
 		}
 	}
+
+	public function displayDate(){
+		echo "fsd";
+	}
 	
     private function edittMusician(){
 		
