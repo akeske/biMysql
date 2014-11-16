@@ -16,9 +16,9 @@ if (isset($registration)) {
 <form method="post" action="register.php" name="registerform" class="pure-form pure-form-stacked">
 	<fieldset>
 	<legend>Register</legend>
-		<input id="login_input_username" class="login_input" type="text" placeholder="User name" pattern="[a-zA-Z0-9]{2,64}" name="user_name" required />
-		<input id="login_input_password_new" class="login_input" type="password" name="user_password_new" pattern=".{6,}" required autocomplete="off" placeholder="Password" />
-		<input id="login_input_password_repeat" class="login_input" type="password" name="user_password_repeat" pattern=".{6,}" required autocomplete="off" placeholder="Password" />
+		<input id="login_input_username" class="login_input" type="text" placeholder="User name" pattern="[a-zA-Z0-9]{2,64}" name="user_name" required maxlength="20" />
+		<input id="login_input_password_new" class="login_input" type="password" name="user_password_new" pattern=".{4,}" required autocomplete="off" placeholder="Password" />
+		<input id="login_input_password_repeat" class="login_input" type="password" name="user_password_repeat" pattern=".{4,}" required autocomplete="off" placeholder="Password" />
 
 		<select id="type" name="type">
 			<option value="1"> admin </option>

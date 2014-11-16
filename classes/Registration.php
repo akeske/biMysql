@@ -19,8 +19,8 @@ class Registration{
             $this->errors[] = "Empty Password";
         } elseif ($_POST['user_password_new'] !== $_POST['user_password_repeat']) {
             $this->errors[] = "Password and password repeat are not the same";
-        } elseif (strlen($_POST['user_password_new']) < 6) {
-            $this->errors[] = "Password has a minimum length of 6 characters";
+        } elseif (strlen($_POST['user_password_new']) < 4) {
+            $this->errors[] = "Password has a minimum length of 4 characters";
         } elseif (strlen($_POST['user_name']) > 64 || strlen($_POST['user_name']) < 2) {
             $this->errors[] = "Username cannot be shorter than 2 or longer than 64 characters";
         } elseif (!preg_match('/^[a-z\d]{2,64}$/i', $_POST['user_name'])) {
@@ -42,7 +42,6 @@ class Registration{
             if (!$this->db_connection->connect_errno) {
 
                 $user_name = $this->db_connection->real_escape_string(strip_tags($_POST['user_name'], ENT_QUOTES));
-                $user_email = $this->db_connection->real_escape_string(strip_tags($_POST['user_email'], ENT_QUOTES));
 
                 $user_password = $_POST['user_password_new'];
 
@@ -54,8 +53,8 @@ class Registration{
                 if ($query_check_user_name->num_rows == 1) {
                     $this->errors[] = "Sorry, that username is already taken.";
                 } else {
-                    $sql = "INSERT INTO user (name, password)
-                            VALUES('" . $user_name . "', '" . $user_password_hash . "');";
+                    $sql = "INSERT INTO user (name, password, type)
+                            VALUES('" . $user_name . "', '" . $user_password_hash . "', '".$_POST['type']."');";
                     $query_new_user_insert = $this->db_connection->query($sql);
 
                     if ($query_new_user_insert) {

@@ -32,7 +32,7 @@ class Login{
             if (!$this->db_connection->connect_errno) {
                 $user_name = $this->db_connection->real_escape_string($_POST['user_name']);
 
-                $sql = "SELECT name, password
+                $sql = "SELECT name, password, type
                         FROM user
                         WHERE name = '" . $user_name . "';";
                 $result_of_login_check = $this->db_connection->query($sql);
@@ -42,6 +42,7 @@ class Login{
 
                     if (password_verify($_POST['user_password'], $result_row->password)) {
                         $_SESSION['user_name'] = $result_row->name;
+                        $_SESSION['user_type'] = $result_row->type;
                         $_SESSION['user_login_status'] = 1;
                     } else {
                         $this->errors[] = "Wrong password. Try again.";

@@ -41,8 +41,8 @@
 					maxWidth	: 800,
 					maxHeight	: 600,
 					fitToView	: false,
-					width		: '80%',
-					height		: '80%',
+					width		: '100%',
+					height		: '100%',
 					autoSize	: false,
 					closeClick	: false,
 					openEffect	: 'none',
@@ -65,16 +65,19 @@
 						include("views/not_logged_in.php");
 					}
 					?>
-					<form method="post" action=" " onSubmit="window.location.reload()">
+					<form method="post" action="" onClick="window.location.reload()">
 						<input type="button" value="Refresh page" class="pure-button pure-button-primary">
 					</form>
 				</td>
 			
 				<td>
+					<?php
+					if ($login->isUserLoggedIn() == true) { ?>
 					<fieldset id="fieldset">
 						<legend>Musician</legend>
 						<?php include("views/musician.php"); ?>
 					</fieldset>
+					<?php } ?>
 				</td>
 			</tr>
 			<tr>
@@ -82,7 +85,7 @@
 				<td>
 					<fieldset id="fieldset">
 						<legend>Students</legend>
-						<?php include("views/musician.php"); ?>
+						<?php // include("views/musician.php"); ?>
 					</fieldset>
 				</td>
 			</tr>
@@ -91,7 +94,7 @@
 				<td>
 					<fieldset id="fieldset">
 						<legend>Instruments</legend>
-						<?php include("views/musician.php"); ?>
+						<?php // include("views/musician.php"); ?>
 					</fieldset>
 				</td>
 			</tr>

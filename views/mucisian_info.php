@@ -1,5 +1,8 @@
 
 <?php
+
+require_once("classes/Musician.php");
+	$musician = new Musician();
 echo "fsd";
 if(isset($_GET['id'])){
 	$musician->connect();

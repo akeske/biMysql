@@ -162,6 +162,7 @@ display: block;
 cursor: not-allowed;
 background-color: #eaeded;
 color: #cad2d3;
+color: #000000;
 }
 /*
 Need to separate out the :not() selector from the rest of the CSS 2.1 selectors
