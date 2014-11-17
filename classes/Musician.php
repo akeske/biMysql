@@ -86,7 +86,7 @@ class Musician{
 					$this->db_connection->query($sql);
 				}
 
-				if(!empty($_POST['new_telephone']) && !empty($_POST['new_validStart']){
+				if(!empty($_POST['new_telephone']) && !empty($_POST['new_validStart']) ){
 					$parts = explode ('/' , $_POST['new_validStart']);
 						$day=$parts[2];
 						$month=$parts[1];

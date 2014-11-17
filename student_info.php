@@ -54,7 +54,8 @@ if(isset($_GET['id'])){
 	<link rel="stylesheet" href="css/buttons.css">
 	<link rel="stylesheet" href="css/forms.css">
 	<link rel="stylesheet" href="css/tables.css">
-		
+	<link rel="stylesheet" href="css/styles.css">
+
 	<link rel="stylesheet" type="text/css" href="css/tcal.css" />
 	<script type="text/javascript" src="js/tcal.js"></script>
 </head>

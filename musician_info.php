@@ -25,6 +25,7 @@ if(isset($_GET['id'])){
 				WHERE id = '".$_GET['id']."';";
 		$result = $musician->db_connection->query($sql);
 		$row = $result->fetch_array();
+		$id_musician = $row['musician_id'];
 		$name = $row['name'];
 		$telephone = $row['telephone'];
 		if($row['valid_start']!=null){
@@ -54,6 +55,7 @@ if(isset($_GET['id'])){
 	<link rel="stylesheet" href="css/buttons.css">
 	<link rel="stylesheet" href="css/forms.css">
 	<link rel="stylesheet" href="css/tables.css">
+	<link rel="stylesheet" href="css/styles.css">
 		
 	<link rel="stylesheet" type="text/css" href="css/tcal.css" />
 	<script type="text/javascript" src="js/tcal.js"></script>
@@ -65,7 +67,7 @@ if(isset($_GET['id'])){
 if ($_SESSION['user_type']=="admin" || $_SESSION['user_type']=="secretary") { ?>
 <tr>
 <td>
-	<form method="post" action="musician_info.php?id=<?php echo $id; ?>&mus_id=<?php echo $mus_id; ?>" name="editMucisianForm" class="pure-form">
+	<form method="post" action="musician_info.php?id=<?php echo $row['id']; ?>&mus_id=<?php echo $row['musician_id']; ?>" name="editMucisianForm" class="pure-form">
 		<fieldset id="fieldset">
 		<legend>Set valid end for musician</legend>
 			<input value="<?php if(isset($_GET['id'])){ echo $mus_id; } ?>" id="mus_id" size="1" type="hidden" autocomplete="off" name="mus_id" maxlength="12"/>
@@ -88,7 +90,7 @@ if ($_SESSION['user_type']=="admin" || $_SESSION['user_type']=="secretary") { ?>
 		<p align="right"> <input type="submit" class="pure-button pure-button-primary" name="editMusician" value="Edit / Insert" /> </p>
 	</form>
 
-	<form method="post" action="musician_info.php?id=<?php echo $id; ?>&mus_id=<?php echo $mus_id; ?>&find=1" name="findMucisianForm" class="pure-form">
+	<form method="post" action="musician_info.php?id=<?php echo $row['id']; ?>&mus_id=<?php echo $row['musician_id']; ?>&find=1" name="findMucisianForm" class="pure-form">
 		<fieldset id="fieldset">
 		<legend>Find telephone number</legend>
 			<input autocomplete="off" type="text" name="findDateMusician" class="tcal" id="findDateMusician" size="30" placeholder="Date" maxlength="12"/>
