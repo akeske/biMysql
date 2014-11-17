@@ -60,7 +60,7 @@
 	</head>
 	<body>
 		<table id="mainTable">
-			<tr><td></td><td><?php include("menu.php"); ?></td></tr>
+			<tr><td></td><td><?php  include("menu.php"); ?></td></tr>
 			<tr>
 				<td width="280px">
 					<?php
@@ -90,7 +90,7 @@
 				<td>
 					<fieldset id="fieldset">
 						<legend>Students</legend>
-						<?php include("views/students.php"); ?>
+						<?php // include("views/students.php"); ?>
 					</fieldset>
 				</td>
 			</tr>

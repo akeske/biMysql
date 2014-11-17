@@ -18,7 +18,7 @@ if (isset($musician)) {
 <table id="table2">
 <tr>
 <td>
-	<form method="post" action="index.php" name="insertMucisianForm" class="pure-form">
+	<form method="post" action="index_mus.php" name="insertMucisianForm" class="pure-form">
 		<fieldset id="fieldset">
 		<legend>Insert new musician</legend>
 			<input id="name" size="15" class="login_input" type="text" placeholder="Musician name" pattern="[a-zA-Z0-9]{2,64}" autocomplete="off" name="name" required maxlength="12"/>
@@ -29,14 +29,14 @@ if (isset($musician)) {
 		</fieldset>
 	</form>
 
-	<form method="post" action="index.php" name="musicialSqlForm" class="pure-form">
+	<form method="post" action="index_mus.php" name="musicialSqlForm" class="pure-form">
 		<fieldset id="fieldset">
 			<legend>Your SQL query</legend>
 			Table name: musician
 			<br>
 			Fields: id , musician_id , name, telephone , valid_start , valid_end , trans_start , trans_end
 			<br>
-			<input id="musicianSql" name="musicianSql" type="text" placeHolder="Please insert your desirable SQL script" class="login_input" size="120"/>
+			<input id="musicianSql" name="musicianSql" type="text" placeHolder="Please insert your desirable SQL script" class="login_input" size="50"/>
 			<input type="submit" class="pure-button pure-button-primary" name="musicianSqlSubmit" value="Exec" />
 		</fieldset>
 	</form>
@@ -55,7 +55,7 @@ if (isset($musician)) {
 				<th>Valid&nbsp;End</th>
 				<th>Trans&nbsp;Start</th>
 				<th>Trans&nbsp;End</th>
-				<?php if(!$_SESSION['user_type']=="student"){ ?>
+				<?php if($_SESSION['user_type']!="student"){ ?>
 				<th>Edit</th>
 				<?php } ?>
 			</tr>

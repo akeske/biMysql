@@ -15,7 +15,7 @@
 ?>
 <html>
 	<head>
-		<title>Temporal database</title>
+		<title>Temporal database - Musician</title>
 		<meta charset='utf-8'>
 		<link rel="stylesheet" href="css/buttons.css">
 		<link rel="stylesheet" href="css/forms.css">

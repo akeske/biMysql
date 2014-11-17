@@ -2,31 +2,31 @@
 <?php
 session_start();
 require_once("config/db.php");
-require_once("classes/Musician.php");
-$musician = new Musician();
-if (isset($musician)) {
-    if ($musician->errors) {
-        foreach ($musician->errors as $error) {
+require_once("classes/Student.php");
+$student = new Student();
+if (isset($student)) {
+    if ($student->errors) {
+        foreach ($student->errors as $error) {
             echo $error;
         }
     }
-    if ($musician->messages) {
-        foreach ($musician->messages as $message) {
+    if ($student->messages) {
+        foreach ($student->messages as $message) {
             echo $message;
         }
     }
 }
 if(isset($_GET['id'])){
-	$mus_id = $_GET['mus_id'];
+	$stu_id = $_GET['stu_id'];
 	$id = $_GET['id'];
-	$musician->connect();
-	if (!$musician->db_connection->connect_errno) {
-		$sql = "SELECT * FROM musician
+	$student->connect();
+	if (!$student->db_connection->connect_errno) {
+		$sql = "SELECT * FROM student
 				WHERE id = '".$_GET['id']."';";
-		$result = $musician->db_connection->query($sql);
+		$result = $student->db_connection->query($sql);
 		$row = $result->fetch_array();
 		$name = $row['name'];
-		$telephone = $row['telephone'];
+		$address = $row['address'];
 		if($row['valid_start']!=null){
 			$parts1 = explode (' ' , $row['valid_start']);
 			$parts = explode ('-' , $parts1[0]);
@@ -44,7 +44,7 @@ if(isset($_GET['id'])){
 			$validEnd = $day."/".$month."/".$year;
 		}
 		$result->free(); 
-		$musician->db_connection->close();
+		$student->db_connection->close();
 	}
 }
 
@@ -65,34 +65,34 @@ if(isset($_GET['id'])){
 if ($_SESSION['user_type']=="admin" || $_SESSION['user_type']=="secretary") { ?>
 <tr>
 <td>
-	<form method="post" action="musician_info.php?id=<?php echo $id; ?>&mus_id=<?php echo $mus_id; ?>" name="editMucisianForm" class="pure-form">
+	<form method="post" action="student_info.php?id=<?php echo $row['id']; ?>&stu_id=<?php echo $stu_id; ?>" name="editStudentForm" class="pure-form">
 		<fieldset id="fieldset">
-		<legend>Set valid end for musician</legend>
-			<input value="<?php if(isset($_GET['id'])){ echo $mus_id; } ?>" id="mus_id" size="1" type="hidden" autocomplete="off" name="mus_id" maxlength="12"/>
+		<legend>Set valid end for student</legend>
+			<input value="<?php if(isset($_GET['id'])){ echo $stu_id; } ?>" id="stu_id" size="1" type="hidden" autocomplete="off" name="stu_id" maxlength="12"/>
 			<input value="<?php if(isset($_GET['id'])){ echo $id; } ?>" id="id" size="1" type="hidden" autocomplete="off" name="id" maxlength="12"/>
-			<input disabled value="<?php if(isset($_GET['id'])){ echo $mus_id; } ?>" size="1" type="text" autocomplete="off" maxlength="12"/>
+			<input disabled value="<?php if(isset($_GET['id'])){ echo $stu_id; } ?>" size="1" type="text" autocomplete="off" maxlength="12"/>
 			<input disabled value="<?php if(isset($_GET['id'])){ echo $name; } ?>" size="14" type="text" autocomplete="off" maxlength="12"/>
-			<input disabled value="<?php if(isset($_GET['id'])){ echo $telephone; } ?>" size="14" type="text" autocomplete="off" maxlength="12"/>
+			<input disabled value="<?php if(isset($_GET['id'])){ echo $address; } ?>" size="14" type="text" autocomplete="off" maxlength="12"/>
 			<input disabled value="<?php if(isset($_GET['id'])){ echo $validStart; } ?>" autocomplete="off" type="text" class="tcal" size="14" placeholder="Valid start" maxlength="12"/>
-			<input value="<?php if(isset($validEnd)){ echo $validEnd; } ?>" autocomplete="off" type="text" name="validEnd" class="tcal" id="validEnd" size="14" placeholder="Valid end"/>
+			<input autocomplete="off" type="text" name="validEnd" class="tcal" id="validEnd" size="14" placeholder="Valid end"/>
 		</fieldset>
 
 		<fieldset id="fieldset">
-		<legend>Insert new info about musician</legend>
-			<input disabled value="<?php if(isset($_GET['id'])){ echo $mus_id; } ?>" size="1" type="text" autocomplete="off" maxlength="12"/>
+		<legend>Insert new info about student</legend>
+			<input disabled value="<?php if(isset($_GET['id'])){ echo $stu_id; } ?>" size="1" type="text" autocomplete="off" maxlength="12"/>
 			<input disabled value="<?php if(isset($_GET['id'])){ echo $name; } ?>" size="14" type="text" autocomplete="off" maxlength="12"/>
-			<input value="" id="new_telephone" size="14" type="text" name="new_telephone" autocomplete="off" placeholder="New Telephone" maxlength="12"/>
+			<input value="" id="new_address" size="14" type="text" name="new_address" autocomplete="off" placeholder="New address" maxlength="12"/>
 			<input value="" autocomplete="off" type="text" name="new_validStart" class="tcal" id="new_validStart" size="14" placeholder="Valid start" maxlength="12"/>
 			<input value="" autocomplete="off" type="text" name="new_validEnd" class="tcal" id="new_validEnd" size="14" placeholder="Valid end" maxlength="12"/>
 		</fieldset>
-		<p align="right"> <input type="submit" class="pure-button pure-button-primary" name="editMusician" value="Edit / Insert" /> </p>
+		<p align="right"> <input type="submit" class="pure-button pure-button-primary" name="editStudent" value="Edit / Insert" /> </p>
 	</form>
 
-	<form method="post" action="musician_info.php?id=<?php echo $id; ?>&mus_id=<?php echo $mus_id; ?>&find=1" name="findMucisianForm" class="pure-form">
+	<form method="post" action="student_info.php?id=<?php echo $row['id']; ?>&stu_id=<?php echo $stu_id; ?>&find=1" name="findStudentForm" class="pure-form">
 		<fieldset id="fieldset">
-		<legend>Find telephone number</legend>
-			<input autocomplete="off" type="text" name="findDateMusician" class="tcal" id="findDateMusician" size="30" placeholder="Date" maxlength="12"/>
-			<input type="submit" class="pure-button pure-button-primary" name="findMusician" value="Find" />
+		<legend>Find address</legend>
+			<input autocomplete="off" type="text" name="findDateStudent" class="tcal" id="findDateStudent" size="30" placeholder="Date" maxlength="12"/>
+			<input type="submit" class="pure-button pure-button-primary" name="findStudent" value="Find" />
 		</fieldset>
 	</form>
 
@@ -101,43 +101,43 @@ if ($_SESSION['user_type']=="admin" || $_SESSION['user_type']=="secretary") { ?>
 	</form>
 	
 	<fieldset id="fieldset">
-		<legend>Results of musician</legend>
+		<legend>Results of student</legend>
 		<div>
 		<table id="table1">
 			<tr>
 				<th>ID</th>
-				<th>ID&nbsp;musician</th>
+				<th>ID&nbsp;student</th>
 				<th>Name</th>
-				<th>Telephone</th>
+				<th>Address</th>
 				<th>Valid&nbsp;Start</th>
 				<th>Valid&nbsp;End</th>
 				<th>Trans&nbsp;Start</th>
 				<th>Trans&nbsp;End</th>
 			</tr>
 			<?php
-			$musician->connect();
-			if (!$musician->db_connection->connect_errno) {
+			$student->connect();
+			if (!$student->db_connection->connect_errno) {
 				if ($_SESSION['user_type']=="admin") {
-					$sql = "SELECT * FROM musician
-							WHERE musician_id = '".$mus_id."'
+					$sql = "SELECT * FROM student
+							WHERE student_id = '".$stu_id."'
 							HAVING read_level LIKE '%admin%'
 							ORDER BY valid_start, trans_end DESC";
 				}elseif ($_SESSION['user_type']=="student") {
-					$sql = "SELECT * FROM musician
-							WHERE musician_id = '".$mus_id."'
+					$sql = "SELECT * FROM student
+							WHERE student_id = '".$stu_id."'
 							HAVING read_level LIKE '%student%'
 							ORDER BY valid_start, trans_end DESC";
 				}else{
-					$sql = "SELECT * FROM musician
-							WHERE musician_id = '".$mus_id."'
+					$sql = "SELECT * FROM student
+							WHERE student_id = '".$stu_id."'
 							HAVING read_level LIKE '%secretary%'
 							ORDER BY valid_start, trans_end DESC";
 				}
-				if(isset($_GET['find']) && $_POST['findDateMusician']!=""){
-					$sql = $musician->findMucisianForm();
+				if(isset($_GET['find']) && $_POST['findDateStudent']!=""){
+					$sql = $student->findStudentFormForm();
 				}
 				echo $sql;
-				$result = $musician->db_connection->query($sql);
+				$result = $student->db_connection->query($sql);
 				$even = 0;
 				while( $row = $result->fetch_array() ){
 					if($row['valid_end']==null && $row['trans_end']==null){
@@ -153,17 +153,17 @@ if ($_SESSION['user_type']=="admin" || $_SESSION['user_type']=="secretary") { ?>
 					<?php	$even=0;
 					}?>
 						<td><?php echo $row['id']; ?></td>
-						<td><?php echo $row['musician_id']; ?></td>
+						<td><?php echo $row['student_id']; ?></td>
 						<td><?php echo $row['name']; ?></td>
-						<td><?php echo $row['telephone']; ?></td>
-						<td><?php echo $musician->displayDate($row['valid_start'], "valid"); ?></td>
-						<td><?php echo $musician->displayDate($row['valid_end'], "valid"); ?></td>
-						<td><?php echo $musician->displayDate($row['trans_start'], "trans"); ?></td>
-						<td><?php echo $musician->displayDate($row['trans_end'], "trans"); ?></td> 
+						<td><?php echo $row['address']; ?></td>
+						<td><?php echo $student->displayDateStudent($row['valid_start'], "valid"); ?></td>
+						<td><?php echo $student->displayDateStudent($row['valid_end'], "valid"); ?></td>
+						<td><?php echo $student->displayDateStudent($row['trans_start'], "trans"); ?></td>
+						<td><?php echo $student->displayDateStudent($row['trans_end'], "trans"); ?></td> 
 					</tr>
 			<?php }
 				$result->free();
-				$musician->db_connection->close();
+				$student->db_connection->close();
 			}else{
 			} ?>
 		</table>
