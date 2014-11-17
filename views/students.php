@@ -20,7 +20,7 @@ if (isset($musician)) {
 <td>
 	<form method="post" action="index.php" name="insertMucisianForm" class="pure-form">
 		<fieldset id="fieldset">
-		<legend>Insert new musician</legend>
+		<legend>Insert new student</legend>
 			<input id="name" size="15" class="login_input" type="text" placeholder="Musician name" pattern="[a-zA-Z0-9]{2,64}" autocomplete="off" name="name" required maxlength="12"/>
 			<input id="telephone" size="15" class="login_input" type="text" name="telephone" required autocomplete="off" placeholder="Telephone" required maxlength="12"/>
 			<input autocomplete="off" type="text" name="validStart" class="tcal" id="validStart" size="14" placeholder="Valid start" required maxlength="12"/>

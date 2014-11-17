@@ -14,7 +14,6 @@ if (isset($login)) {
 }
 ?>
 
-<!-- login form box -->
 <form method="post" action="index.php" name="loginform" class="pure-form  pure-form-stacked">
 	<fieldset>
 		<legend>Login</legend>

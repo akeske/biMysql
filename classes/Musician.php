@@ -181,4 +181,28 @@ class Musician{
             }
         }
     }
+
+    public function displayDate($date, $type){
+		if($date!=""){
+			if($type=="valid"){
+				$parts1 = explode (' ' , $date);
+				$parts = explode ('-' , $parts1[0]);
+					$day=$parts[2];
+					$month=$parts[1];
+					$year=$parts[0];
+				return $day."/".$month."/".$year;
+			}else{
+				$parts1 = explode (' ' , $date);
+				$parts = explode ('-' , $parts1[0]);
+					$day=$parts[2];
+					$month=$parts[1];
+					$year=$parts[0];
+				$parts = explode (':' , $parts1[1]);
+					$sec=$parts[2];
+					$min=$parts[1];
+					$hour=$parts[0];
+				return $day."/".$month."/".$year."&nbsp;".$hour.":".$min.":".$sec;
+			}
+		}
+	}
 }

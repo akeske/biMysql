@@ -48,29 +48,7 @@ if(isset($_GET['id'])){
 		$musician->db_connection->close();
 	}
 }
-function displayDate($date, $type){
-	if($date!=""){
-		if($type=="valid"){
-			$parts1 = explode (' ' , $date);
-			$parts = explode ('-' , $parts1[0]);
-				$day=$parts[2];
-				$month=$parts[1];
-				$year=$parts[0];
-			return $day."/".$month."/".$year;
-		}else{
-			$parts1 = explode (' ' , $date);
-			$parts = explode ('-' , $parts1[0]);
-				$day=$parts[2];
-				$month=$parts[1];
-				$year=$parts[0];
-			$parts = explode (':' , $parts1[1]);
-				$sec=$parts[2];
-				$min=$parts[1];
-				$hour=$parts[0];
-			return $day."/".$month."/".$year."&nbsp;".$hour.":".$min.":".$sec;
-		}
-	}
-}
+
 ?>
 <html>
 <head>
@@ -179,10 +157,10 @@ if ($_SESSION['user_type']=="admin" || $_SESSION['user_type']=="secretary") { ?>
 						<td><?php echo $row['musician_id']; ?></td>
 						<td><?php echo $row['name']; ?></td>
 						<td><?php echo $row['telephone']; ?></td>
-						<td><?php echo displayDate($row['valid_start'], "valid"); ?></td>
-						<td><?php echo displayDate($row['valid_end'], "valid"); ?></td>
-						<td><?php echo displayDate($row['trans_start'], "trans"); ?></td>
-						<td><?php echo displayDate($row['trans_end'], "trans"); ?></td> 
+						<td><?php echo $musician->displayDate($row['valid_start'], "valid"); ?></td>
+						<td><?php echo $musician->displayDate($row['valid_end'], "valid"); ?></td>
+						<td><?php echo $musician->displayDate($row['trans_start'], "trans"); ?></td>
+						<td><?php echo $musician->displayDate($row['trans_end'], "trans"); ?></td> 
 					</tr>
 			<?php }
 				$result->free();

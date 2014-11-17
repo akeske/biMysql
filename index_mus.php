@@ -11,7 +11,7 @@
 	$login = new Login();
 	require_once("classes/Musician.php");
 	$musician = new Musician();
-	$_SESSION['page'] = "index";
+	$_SESSION['page'] = "musician";
 ?>
 <html>
 	<head>
@@ -83,24 +83,6 @@
 						<?php include("views/musician.php"); ?>
 					</fieldset>
 					<?php } ?>
-				</td>
-			</tr>
-			<tr>
-				<td width="280px"></td>	
-				<td>
-					<fieldset id="fieldset">
-						<legend>Students</legend>
-						<?php include("views/students.php"); ?>
-					</fieldset>
-				</td>
-			</tr>
-			<tr>
-				<td width="280px"></td>	
-				<td>
-					<fieldset id="fieldset">
-						<legend>Instruments</legend>
-						<?php // include("views/musician.php"); ?>
-					</fieldset>
 				</td>
 			</tr>
 		</table>
