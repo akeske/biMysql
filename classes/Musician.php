@@ -72,7 +72,6 @@ class Musician{
 					$sql = "UPDATE musician
 							SET read_level = 'admin', trans_end = '".$date."'
 							WHERE id = ".$_POST['id'];
-							$this->errors[] = $sql;
 					$this->db_connection->query($sql);
 
 					$parts = explode ('/' , $_POST['validEnd']);
@@ -87,6 +86,7 @@ class Musician{
 				}
 
 				if(!empty($_POST['new_telephone']) && !empty($_POST['new_validStart']) ){
+					$new_telephone = $this->db_connection->real_escape_string(strip_tags($_POST['new_telephone'], ENT_QUOTES));
 					$parts = explode ('/' , $_POST['new_validStart']);
 						$day=$parts[2];
 						$month=$parts[1];
@@ -104,11 +104,11 @@ class Musician{
 					if($new_validEnd==""){
 						$sql = "INSERT INTO musician
 							(id, musician_id, name, telephone, valid_start, valid_end, trans_start, trans_end, read_level) VALUES
-							(NULL, '".$row['musician_id']."', '".$row['name']."', '".$_POST['new_telephone']."', '".$new_validStart."', NULL, CURRENT_TIMESTAMP, NULL, 'admin,secretary,student');";
+							(NULL, '".$row['musician_id']."', '".$row['name']."', '".$new_telephone."', '".$new_validStart."', NULL, CURRENT_TIMESTAMP, NULL, 'admin,secretary,student');";
 					}else{
 						$sql = "INSERT INTO musician
 							(id, musician_id, name, telephone, valid_start, valid_end, trans_start, trans_end, read_level) VALUES
-							(NULL, '".$row['musician_id']."', '".$row['name']."', '".$_POST['new_telephone']."', '".$new_validStart."', '".$new_validEnd."', CURRENT_TIMESTAMP, NULL, 'admin');";
+							(NULL, '".$row['musician_id']."', '".$row['name']."', '".$new_telephone."', '".$new_validStart."', '".$new_validEnd."', CURRENT_TIMESTAMP, NULL, 'admin');";
 					}
 					$result_insert_musician = $this->db_connection->query($sql);
 					if ($result_insert_musician) {
@@ -116,6 +116,12 @@ class Musician{
 					}else{
 						$this->errors[] =  "Error: " . $sql . "<br>" . mysqli_error($this->db_connection);
 					}
+				} else {
+					$sql = "UPDATE user
+							SET is_enable = 'false'
+							WHERE id = ".$row['musician_id'];
+					$this->db_connection->query($sql);
+					$this->messages[] = "The musician <b>".$row['name']."</b> canoot any more log in.";
 				}
                 $result->free();
 				$this->db_connection->close();
@@ -132,52 +138,70 @@ class Musician{
             $this->errors[] = "Telephone field was empty.";
         } else {
 			$this->connect();
-			if (!$this->db_connection->connect_errno) {
-				$sql = "SELECT MAX(musician_id) FROM musician";
-				$result = $this->db_connection->query($sql);
-				if( mysqli_num_rows($result) == 0){
-					$new_mus_id = 1;
-				}else{
-					$row = $result->fetch_array();
-					$new_mus_id = $row[0] + 1;
-				}
+    		$validStart = $this->db_connection->real_escape_string(strip_tags($_POST['validStart'], ENT_QUOTES));
+    		$telephone = $this->db_connection->real_escape_string(strip_tags($_POST['telephone'], ENT_QUOTES));
+    		$name = $this->db_connection->real_escape_string(strip_tags($_POST['name'], ENT_QUOTES));
+			$sql = "SELECT * FROM user WHERE name = '" . $name . "';";
+            $query_check_user_name = $this->db_connection->query($sql);
 
-                $name = $this->db_connection->real_escape_string($_POST['name']);
-                $parts = explode ('/' , $_POST['validStart']);
-					$day=$parts[2];
-					$month=$parts[1];
-					$year=$parts[0];
-					$validStart=$day.$month.$year."000000";
-				if($_POST['validEnd']!=""){
-					$parts = explode ('/' , $_POST['validEnd']);
+            if ($query_check_user_name->num_rows == 1) {
+            	$this->errors[] = "Sorry, that username is already taken.";
+            }else{
+				if (!$this->db_connection->connect_errno) {
+					$user_password_hash = password_hash($name, PASSWORD_DEFAULT);
+	                $sql = "INSERT INTO user
+							(id, name, password, type) VALUES
+							(NULL, '".$name."', '".$user_password_hash."', 'musician');";
+	           		$result_insert_musician = $this->db_connection->query($sql);
+	           		$new_mus_id = $this->db_connection->insert_id;
+
+					$sql = "SELECT MAX(musician_id) FROM musician";
+					$result = $this->db_connection->query($sql);
+					//if( mysqli_num_rows($result) == 0){
+					//	$new_mus_id = 1;
+					//}else{
+					//	$row = $result->fetch_array();
+					//	$new_mus_id = $row[0] + 1;
+					//}
+
+	                $parts = explode ('/' , $validStart);
 						$day=$parts[2];
 						$month=$parts[1];
 						$year=$parts[0];
-						$validEnd=$day.$month.$year."000000";
-				}else{
-					$validEnd = "";
-				}
-				if($validEnd==""){
-					$sql = "INSERT INTO musician
-						(id, musician_id, name, telephone, valid_start, valid_end, trans_start, trans_end, read_level) VALUES
-						(NULL, '".$new_mus_id."', '".$name."', '".$_POST['telephone']."', '".$validStart."', NULL, CURRENT_TIMESTAMP, NULL, 'admin,student,secretary');";
-				}else{
-              	  $sql = "INSERT INTO musician
-						(id, musician_id, name, telephone, valid_start, valid_end, trans_start, trans_end, read_level) VALUES
-						(NULL, '".$new_mus_id."', '".$name."', '".$_POST['telephone']."', '".$validStart."', '".$validEnd."', CURRENT_TIMESTAMP, NULL, 'admin');";
-                }
-           		$result_insert_musician = $this->db_connection->query($sql);
-				
-				if ($result_insert_musician) {
-					 $this->messages[] = "New musician has id: " . $this->db_connection->insert_id;
-				}else{
-					$this->errors[] =  "Error: " . $sql . "<br>" . mysqli_error($this->db_connection);
-				}
-				
-				$this->db_connection->close();
-            } else {
-                $this->errors[] = "Database connection problem: ".$this->db_connection->connect_error;
-            }
+						$validStart=$day.$month.$year."000000";
+					if($_POST['validEnd']!=""){
+						$parts = explode ('/' , $_POST['validEnd']);
+							$day=$parts[2];
+							$month=$parts[1];
+							$year=$parts[0];
+							$validEnd=$day.$month.$year."000000";
+					}else{
+						$validEnd = "";
+					}
+					if($validEnd==""){
+						$sql = "INSERT INTO musician
+							(id, musician_id, name, telephone, valid_start, valid_end, trans_start, trans_end, read_level) VALUES
+							(NULL, '".$new_mus_id."', '".$name."', '".$telephone."', '".$validStart."', NULL, CURRENT_TIMESTAMP, NULL, 'admin,student,secretary');";
+					}else{
+	              	  $sql = "INSERT INTO musician
+							(id, musician_id, name, telephone, valid_start, valid_end, trans_start, trans_end, read_level) VALUES
+							(NULL, '".$new_mus_id."', '".$name."', '".$telephone."', '".$validStart."', '".$validEnd."', CURRENT_TIMESTAMP, NULL, 'admin');";
+	                }
+	           		$result_insert_musician = $this->db_connection->query($sql);
+
+	           		
+					
+					if ($result_insert_musician) {
+						 $this->messages[] = "New musician has id: " . $this->db_connection->insert_id;
+					}else{
+						$this->errors[] =  "Error: " . $sql . "<br>" . mysqli_error($this->db_connection);
+					}
+					
+					$this->db_connection->close();
+	            } else {
+	                $this->errors[] = "Database connection problem: ".$this->db_connection->connect_error;
+	            }
+	        }
         }
     }
 

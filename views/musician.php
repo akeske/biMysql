@@ -18,10 +18,12 @@ if (isset($musician)) {
 <table id="table2">
 <tr>
 <td>
+	<?php
+	if ($_SESSION['user_type']!="student") { ?>
 	<form method="post" action="index_mus.php" name="insertMucisianForm" class="pure-form">
 		<fieldset id="fieldset">
 		<legend>Insert new musician</legend>
-			<input id="name" size="15" class="login_input" type="text" placeholder="Musician name" pattern="[a-zA-Z0-9]{2,64}" autocomplete="off" name="name" required maxlength="12"/>
+			<input id="name" size="15" class="login_input" type="text" placeholder="Musician name" pattern="[a-zA-Z0-9\s\u00a1-\uffff]{2,30}" autocomplete="off" name="name" required maxlength="30"/>
 			<input id="telephone" size="15" class="login_input" type="text" name="telephone" required autocomplete="off" placeholder="Telephone" required maxlength="12"/>
 			<input autocomplete="off" type="text" name="validStart" class="tcal" id="validStart" size="14" placeholder="Valid start" required maxlength="12"/>
 			<input autocomplete="off" type="text" name="validEnd" class="tcal" id="validEnd" size="14" placeholder="Valid end" maxlength="12"/>
@@ -40,13 +42,25 @@ if (isset($musician)) {
 			<input type="submit" class="pure-button pure-button-primary" name="musicianSqlSubmit" value="Exec" />
 		</fieldset>
 	</form>
+	<?php } ?>
 	
 	<fieldset id="fieldset">
 		<legend>List of musicians</legend>
 		<div id="overflow">
 		<table id="table1">
 			<thead class="fixedHeader1">
+			<?php
+			if ($_SESSION['user_type']=="student") { ?>
 			<tr>
+				<th>Name</th>
+				<th>Telephone</th>
+			</tr>
+			<?php }else{ ?>
+			<tr>
+				<?php if ($_SESSION['user_type']=="musician") { ?>
+				<th>Name</th>
+				<th>Telephone</th>
+				<?php }else{ ?>
 				<th>ID</th>
 				<th>ID&nbsp;musician</th>
 				<th>Name</th>
@@ -57,8 +71,10 @@ if (isset($musician)) {
 				<th>Trans&nbsp;End</th>
 				<?php if($_SESSION['user_type']!="student"){ ?>
 				<th>Edit</th>
-				<?php } ?>
+				<?php }
+				} ?>
 			</tr>
+			<?php } ?>
 			</thead>
 			<tbody class="scrollContent1">
 			<?php
@@ -71,10 +87,10 @@ if (isset($musician)) {
 						$sql = "SELECT * FROM musician
 								HAVING read_level LIKE '%admin%'
 								ORDER BY name, musician_id, valid_start, trans_end DESC";
-					}elseif ($_SESSION['user_type']=="student") {
-						$sql = "SELECT * FROM musician
+					}elseif ($_SESSION['user_type']=="student" || $_SESSION['user_type']=="musician") {
+						$sql = "SELECT name, telephone, read_level, trans_end, valid_end FROM musician
 								HAVING read_level LIKE '%student%'
-								ORDER BY name, valid_start, trans_end DESC";
+								ORDER BY name ASC";
 					}else{
 						$sql = "SELECT * FROM musician
 								HAVING read_level LIKE '%secretary%'
@@ -98,7 +114,11 @@ if (isset($musician)) {
 					}else{ ?>
 						<tr class="even" style=<?php echo $style; ?> >
 					<?php	$even=0;
-					}?>
+					}
+						if ($_SESSION['user_type']=="student" || $_SESSION['user_type']=="musician") { ?>
+						<td><?php echo $row['name']; ?></td>
+						<td><?php echo $row['telephone']; ?></td>
+						<?php }else{ ?>
 						<td><?php echo $row['id']; ?></td>
 						<td><?php echo $row['musician_id']; ?></td>
 						<td><?php echo $row['name']; ?></td>
@@ -109,9 +129,8 @@ if (isset($musician)) {
 						<td><?php echo $musician->displayDate($row['trans_end'], "trans"); ?></td> 
 						<?php if($row['valid_end']==null && $row['trans_end']==null && $_SESSION['user_type']!="student"){ ?>
 						<td><a class="fancybox fancybox.iframe" href="musician_info.php?id=<?php echo $row['id']; ?>&mus_id=<?php echo $row['musician_id']; ?>">Edit</a></td>
-						<?php }else{ ?>
-						<td></tr> <?php
-						} ?>
+						<?php } 						
+						}?>
 					</tr>
 			<?php }
 				$result->free();

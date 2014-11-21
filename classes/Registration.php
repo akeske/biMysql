@@ -13,6 +13,7 @@ class Registration{
     }
 
     private function registerNewUser(){
+		$pattern = '/select|union|insert|delete|or/i';
         if (empty($_POST['user_name'])) {
             $this->errors[] = "Empty Username";
         } elseif (empty($_POST['user_password_new']) || empty($_POST['user_password_repeat'])) {
@@ -25,6 +26,9 @@ class Registration{
             $this->errors[] = "Username cannot be shorter than 2 or longer than 64 characters";
         } elseif (!preg_match('/^[a-z\d]{2,64}$/i', $_POST['user_name'])) {
             $this->errors[] = "Username does not fit the name scheme: only a-Z and numbers are allowed, 2 to 64 characters";
+        } elseif(preg_match($pattern, $_POST['user_name'], $matches, PREG_OFFSET_CAPTURE) ||
+				preg_match($pattern, $_POST['user_password'], $matches, PREG_OFFSET_CAPTURE) ){
+			$this->errors[] = "TRY HARDER!!!!";
         } elseif (!empty($_POST['user_name'])
             && strlen($_POST['user_name']) <= 64
             && strlen($_POST['user_name']) >= 2
@@ -53,8 +57,8 @@ class Registration{
                 if ($query_check_user_name->num_rows == 1) {
                     $this->errors[] = "Sorry, that username is already taken.";
                 } else {
-                    $sql = "INSERT INTO user (name, password, type)
-                            VALUES('" . $user_name . "', '" . $user_password_hash . "', '".$_POST['type']."');";
+                    $sql = "INSERT INTO user (name, password, type, is_enable)
+                            VALUES('" . $user_name . "', '" . $user_password_hash . "', '".$_POST['type']."', 'true');";
                     $query_new_user_insert = $this->db_connection->query($sql);
 
                     if ($query_new_user_insert) {

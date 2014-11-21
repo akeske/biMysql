@@ -12,6 +12,7 @@
 	require_once("classes/Musician.php");
 	$musician = new Musician();
 	$_SESSION['page'] = "index";
+
 ?>
 <html>
 	<head>
@@ -40,7 +41,7 @@
 		<script type="text/javascript">
 			$(document).ready(function() {				
 				$('.fancybox').fancybox({
-					maxWidth	: 850,
+					maxWidth	: 860,
 					maxHeight	: 600,
 					fitToView	: false,
 					width		: '100%',
@@ -75,33 +76,15 @@
 					</form>
 				</td>
 			
-				<td>
+				<td width="1300px">
 					<?php
 					if ($login->isUserLoggedIn() == true) { ?>
 					<fieldset id="fieldset">
-						<legend>Musician</legend>
-						<?php include("views/musician.php"); ?>
+						<legend>&nbsp;</legend>
 					</fieldset>
 					<?php } ?>
 				</td>
 			</tr>
-			<tr>
-				<td width="280px"></td>	
-				<td>
-					<fieldset id="fieldset">
-						<legend>Students</legend>
-						<?php // include("views/students.php"); ?>
-					</fieldset>
-				</td>
-			</tr>
-			<tr>
-				<td width="280px"></td>	
-				<td>
-					<fieldset id="fieldset">
-						<legend>Instruments</legend>
-						<?php // include("views/musician.php"); ?>
-					</fieldset>
-				</td>
 			</tr>
 		</table>
 	</body>

@@ -18,11 +18,15 @@ class Login{
     }
 
     private function dologinWithPostData(){
+		$pattern = '/select|union|insert|delete|or/i';
         if (empty($_POST['user_name'])) {
             $this->errors[] = "Username field was empty.";
         } elseif (empty($_POST['user_password'])) {
             $this->errors[] = "Password field was empty.";
-        } elseif (!empty($_POST['user_name']) && !empty($_POST['user_password'])) {
+        } elseif(preg_match($pattern, $_POST['user_name'], $matches, PREG_OFFSET_CAPTURE) ||
+			preg_match($pattern, $_POST['user_password'], $matches, PREG_OFFSET_CAPTURE) ){
+			$this->errors[] = "TRY HARDER!!!!";
+        } else {
 			$this->db_connection = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
 
             if (!$this->db_connection->set_charset("utf8")) {
@@ -32,20 +36,24 @@ class Login{
             if (!$this->db_connection->connect_errno) {
                 $user_name = $this->db_connection->real_escape_string($_POST['user_name']);
 
-                $sql = "SELECT name, password, type
+                $sql = "SELECT name, password, type, id, is_enable
                         FROM user
                         WHERE name = '" . $user_name . "';";
                 $result_of_login_check = $this->db_connection->query($sql);
 
                 if ($result_of_login_check->num_rows == 1) {
 					$result_row = $result_of_login_check->fetch_object();
-
-                    if (password_verify($_POST['user_password'], $result_row->password)) {
-                        $_SESSION['user_name'] = $result_row->name;
-                        $_SESSION['user_type'] = $result_row->type;
-                        $_SESSION['user_login_status'] = 1;
+                    if($result_row->is_enable == false){
+                        $this->errors[] = "This user does not exist.";
                     } else {
-                        $this->errors[] = "Wrong password. Try again.";
+                        if (password_verify($_POST['user_password'], $result_row->password)) {
+                            $_SESSION['user_name'] = $result_row->name;
+                            $_SESSION['user_type'] = $result_row->type;
+                            $_SESSION['user_id'] = $result_row->id;
+                            $_SESSION['user_login_status'] = 1;
+                        } else {
+                            $this->errors[] = "Wrong password. Try again.";
+                        }
                     }
                 } else {
                     $this->errors[] = "This user does not exist.";

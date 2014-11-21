@@ -22,8 +22,7 @@ if (isset($registration)) {
 
 		<select id="type" name="type">
 			<option value="1"> admin </option>
-			<option value="2"> student </option>
-			<option value="3" selected> secretary </option>
+			<option value="2" selected> secretary </option>
 		</select>
 		
 		<input type="submit" class="pure-button pure-button-primary" name="register" value="Register" />

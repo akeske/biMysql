@@ -17,34 +17,40 @@ if (isset($student)) {
     }
 }
 if(isset($_GET['id'])){
-	$stu_id = $_GET['stu_id'];
-	$id = $_GET['id'];
-	$student->connect();
-	if (!$student->db_connection->connect_errno) {
-		$sql = "SELECT * FROM student
-				WHERE id = '".$_GET['id']."';";
-		$result = $student->db_connection->query($sql);
-		$row = $result->fetch_array();
-		$name = $row['name'];
-		$address = $row['address'];
-		if($row['valid_start']!=null){
-			$parts1 = explode (' ' , $row['valid_start']);
-			$parts = explode ('-' , $parts1[0]);
-				$day=$parts[2];
-				$month=$parts[1];
-				$year=$parts[0];
-			$validStart = $day."/".$month."/".$year;
+	$pattern = '/select|union|insert|delete|or/i';
+	if(preg_match($pattern, $_GET['stu_id'], $matches, PREG_OFFSET_CAPTURE) ||
+		preg_match($pattern, $_GET['id'], $matches, PREG_OFFSET_CAPTURE) ){
+		$this->errors[] = "TRY HARDER!!!!";
+	}else{
+		$stu_id = $_GET['stu_id'];
+		$id = $_GET['id'];
+		$student->connect();
+		if (!$student->db_connection->connect_errno) {
+			$sql = "SELECT * FROM student
+					WHERE id = '".$_GET['id']."';";
+			$result = $student->db_connection->query($sql);
+			$row = $result->fetch_array();
+			$name = $row['name'];
+			$address = $row['address'];
+			if($row['valid_start']!=null){
+				$parts1 = explode (' ' , $row['valid_start']);
+				$parts = explode ('-' , $parts1[0]);
+					$day=$parts[2];
+					$month=$parts[1];
+					$year=$parts[0];
+				$validStart = $day."/".$month."/".$year;
+			}
+			if($row['valid_end']!=null){
+				$parts1 = explode (' ' , $row['valid_end']);
+				$parts = explode ('-' , $parts1[0]);
+					$day=$parts[2];
+					$month=$parts[1];
+					$year=$parts[0];
+				$validEnd = $day."/".$month."/".$year;
+			}
+			$result->free(); 
+			$student->db_connection->close();
 		}
-		if($row['valid_end']!=null){
-			$parts1 = explode (' ' , $row['valid_end']);
-			$parts = explode ('-' , $parts1[0]);
-				$day=$parts[2];
-				$month=$parts[1];
-				$year=$parts[0];
-			$validEnd = $day."/".$month."/".$year;
-		}
-		$result->free(); 
-		$student->db_connection->close();
 	}
 }
 
@@ -72,8 +78,8 @@ if ($_SESSION['user_type']=="admin" || $_SESSION['user_type']=="secretary") { ?>
 			<input value="<?php if(isset($_GET['id'])){ echo $stu_id; } ?>" id="stu_id" size="1" type="hidden" autocomplete="off" name="stu_id" maxlength="12"/>
 			<input value="<?php if(isset($_GET['id'])){ echo $id; } ?>" id="id" size="1" type="hidden" autocomplete="off" name="id" maxlength="12"/>
 			<input disabled value="<?php if(isset($_GET['id'])){ echo $stu_id; } ?>" size="1" type="text" autocomplete="off" maxlength="12"/>
-			<input disabled value="<?php if(isset($_GET['id'])){ echo $name; } ?>" size="14" type="text" autocomplete="off" maxlength="12"/>
-			<input disabled value="<?php if(isset($_GET['id'])){ echo $address; } ?>" size="14" type="text" autocomplete="off" maxlength="12"/>
+			<input disabled value="<?php if(isset($_GET['id'])){ echo $name; } ?>" size="14" type="text" autocomplete="off" maxlength="30"/>
+			<input disabled value="<?php if(isset($_GET['id'])){ echo $address; } ?>" size="14" type="text" autocomplete="off" maxlength="30"/>
 			<input disabled value="<?php if(isset($_GET['id'])){ echo $validStart; } ?>" autocomplete="off" type="text" class="tcal" size="14" placeholder="Valid start" maxlength="12"/>
 			<input autocomplete="off" type="text" name="validEnd" class="tcal" id="validEnd" size="14" placeholder="Valid end"/>
 		</fieldset>
@@ -82,7 +88,7 @@ if ($_SESSION['user_type']=="admin" || $_SESSION['user_type']=="secretary") { ?>
 		<legend>Insert new info about student</legend>
 			<input disabled value="<?php if(isset($_GET['id'])){ echo $stu_id; } ?>" size="1" type="text" autocomplete="off" maxlength="12"/>
 			<input disabled value="<?php if(isset($_GET['id'])){ echo $name; } ?>" size="14" type="text" autocomplete="off" maxlength="12"/>
-			<input value="" id="new_address" size="14" type="text" name="new_address" autocomplete="off" placeholder="New address" maxlength="12"/>
+			<input value="" id="new_address" size="14" type="text" pattern="[a-zA-Z0-9\s\u00a1-\uffff]{2,30}" name="new_address" autocomplete="off" placeholder="New address" maxlength="12"/>
 			<input value="" autocomplete="off" type="text" name="new_validStart" class="tcal" id="new_validStart" size="14" placeholder="Valid start" maxlength="12"/>
 			<input value="" autocomplete="off" type="text" name="new_validEnd" class="tcal" id="new_validEnd" size="14" placeholder="Valid end" maxlength="12"/>
 		</fieldset>

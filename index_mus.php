@@ -40,7 +40,7 @@
 		<script type="text/javascript">
 			$(document).ready(function() {				
 				$('.fancybox').fancybox({
-					maxWidth	: 850,
+					maxWidth	: 860,
 					maxHeight	: 600,
 					fitToView	: false,
 					width		: '100%',

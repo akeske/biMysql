@@ -9,13 +9,13 @@
 
 	require_once("classes/Login.php");
 	$login = new Login();
-	require_once("classes/Student.php");
-	$student = new Student();
-	$_SESSION['page'] = "student";
+	require_once("classes/Teaching.php");
+	$teaching = new Teaching();
+	$_SESSION['page'] = "teaching";
 ?>
 <html>
 	<head>
-		<title>Temporal database - Students</title>
+		<title>Temporal database - Teaching</title>
 		<meta charset='utf-8'>
 		<link rel="stylesheet" href="css/buttons.css">
 		<link rel="stylesheet" href="css/forms.css">
@@ -79,8 +79,8 @@
 					<?php
 					if ($login->isUserLoggedIn() == true) { ?>
 					<fieldset id="fieldset">
-						<legend>Student</legend>
-						<?php include("views/student.php"); ?>
+						<legend>Teaching</legend>
+						<?php include("views/teaching.php"); ?>
 					</fieldset>
 					<?php } ?>
 				</td>
