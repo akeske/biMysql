@@ -15,9 +15,12 @@
 ?>
 <html>
 	<head>
+		<title>Temporal database - Register</title>
+		<meta charset='utf-8'>
 		<link rel="stylesheet" href="css/buttons.css">
 		<link rel="stylesheet" href="css/forms.css">
 		<link rel="stylesheet" href="css/tables.css">
+		<link rel="stylesheet" href="css/styles.css">
 	</head>
 	<body>
 		<table id="mainTable">

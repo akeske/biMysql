@@ -27,7 +27,8 @@ class Registration{
         } elseif (!preg_match('/^[a-z\d]{2,64}$/i', $_POST['user_name'])) {
             $this->errors[] = "Username does not fit the name scheme: only a-Z and numbers are allowed, 2 to 64 characters";
         } elseif(preg_match($pattern, $_POST['user_name'], $matches, PREG_OFFSET_CAPTURE) ||
-				preg_match($pattern, $_POST['user_password'], $matches, PREG_OFFSET_CAPTURE) ){
+                preg_match($pattern, $_POST['user_password_new'], $matches, PREG_OFFSET_CAPTURE) ||
+                preg_match($pattern, $_POST['user_password_repeat'], $matches, PREG_OFFSET_CAPTURE) ){
 			$this->errors[] = "TRY HARDER!!!!";
         } elseif (!empty($_POST['user_name'])
             && strlen($_POST['user_name']) <= 64
@@ -66,6 +67,11 @@ class Registration{
                     } else {
                         $this->errors[] = "Sorry, your registration failed. Please go back and try again.";
                     }
+
+                    $sql = "INSERT INTO audit
+                        (id, user_id, table_name, query, trans_time) VALUES
+                        (NULL, '".$this->db_connection->insert_id."', 'register', 'user registration: ".$user_name."', CURRENT_TIMESTAMP);";
+                    $this->db_connection->query($sql);
                 }
             } else {
                 $this->errors[] = "Sorry, no database connection.";

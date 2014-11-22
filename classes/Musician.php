@@ -63,15 +63,16 @@ class Musician{
 		}else{
 			$this->connect();
 			if (!$this->db_connection->connect_errno) {
+				$id = $this->db_connection->real_escape_string(strip_tags($_POST['id'], ENT_QUOTES));
 				$sql = "SELECT * FROM musician
-						WHERE id = ".$_POST['id'];
+						WHERE id = ".$id;
 				$result = $this->db_connection->query($sql);
 				$row = $result->fetch_array();
 
 				if($_POST['validEnd']!=""){
 					$sql = "UPDATE musician
 							SET read_level = 'admin', trans_end = '".$date."'
-							WHERE id = ".$_POST['id'];
+							WHERE id = ".$id;
 					$this->db_connection->query($sql);
 
 					$parts = explode ('/' , $_POST['validEnd']);
@@ -124,6 +125,9 @@ class Musician{
 					$this->messages[] = "The musician <b>".$row['name']."</b> canoot any more log in.";
 				}
                 $result->free();
+
+                
+
 				$this->db_connection->close();
 			} else {
                 $this->errors[] = "Database connection problem: ".$this->db_connection->connect_error;
@@ -150,8 +154,8 @@ class Musician{
 				if (!$this->db_connection->connect_errno) {
 					$user_password_hash = password_hash($name, PASSWORD_DEFAULT);
 	                $sql = "INSERT INTO user
-							(id, name, password, type) VALUES
-							(NULL, '".$name."', '".$user_password_hash."', 'musician');";
+							(id, name, password, type, is_enable) VALUES
+							(NULL, '".$name."', '".$user_password_hash."', 'musician', 'true');";
 	           		$result_insert_musician = $this->db_connection->query($sql);
 	           		$new_mus_id = $this->db_connection->insert_id;
 
@@ -188,14 +192,17 @@ class Musician{
 							(NULL, '".$new_mus_id."', '".$name."', '".$telephone."', '".$validStart."', '".$validEnd."', CURRENT_TIMESTAMP, NULL, 'admin');";
 	                }
 	           		$result_insert_musician = $this->db_connection->query($sql);
-
-	           		
 					
 					if ($result_insert_musician) {
 						 $this->messages[] = "New musician has id: " . $this->db_connection->insert_id;
 					}else{
 						$this->errors[] =  "Error: " . $sql . "<br>" . mysqli_error($this->db_connection);
 					}
+
+					$sql = "INSERT INTO audit
+						(id, user_id, table_name, query, trans_time) VALUES
+						(NULL, '".$_SESSION['user_id']."', 'musician', 'inserted new musician: ".$name."', CURRENT_TIMESTAMP);";
+					$this->db_connection->query($sql);
 					
 					$this->db_connection->close();
 	            } else {

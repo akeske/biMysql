@@ -62,6 +62,11 @@ class Teaching{
 				if( mysqli_num_rows($result) == 1){
 					$row = $result->fetch_array();
 
+					$sql = "UPDATE teaching
+							SET read_level = 'admin'
+							WHERE id = ".$row['id'];
+					$this->db_connection->query($sql);
+
 					$parts = explode ('/' , $_POST['new_validEnd']);
 						$day=$parts[2];
 						$month=$parts[1];
@@ -69,8 +74,8 @@ class Teaching{
 						$new_validEnd=$day.$month.$year."000000";
 
 					$sql = "INSERT INTO teaching
-							(id, teaching_id, student_id, musician_id, instrument_id, valid_start, valid_end) VALUES
-							(NULL, '".$row['teaching_id']."', '".$row['student_id']."', '".$row['musician_id']."', '".$row['instrument_id']."', '".$row['valid_start']."', '".$new_validEnd."');";
+							(id, teaching_id, student_id, musician_id, instrument_id, valid_start, valid_end, read_level) VALUES
+							(NULL, '".$row['teaching_id']."', '".$row['student_id']."', '".$row['musician_id']."', '".$row['instrument_id']."', '".$row['valid_start']."', '".$new_validEnd."', 'admin');";
 					$this->db_connection->query($sql);
 	                $result->free();
 					$this->db_connection->close();
@@ -147,12 +152,12 @@ class Teaching{
 
 					if($validEnd==""){
 						$sql = "INSERT INTO teaching
-							(id, teaching_id, student_id, musician_id, instrument_id, valid_start, valid_end) VALUES
-							(NULL, '".$nextTeachID."', '".$stu_id."', '".$mus_id."', '".$ins_id."', '".$validStart."', NULL);";
+							(id, teaching_id, student_id, musician_id, instrument_id, valid_start, valid_end, read_level) VALUES
+							(NULL, '".$nextTeachID."', '".$stu_id."', '".$mus_id."', '".$ins_id."', '".$validStart."', NULL, 'admin,secretary,student');";
 					}else{
 						$sql = "INSERT INTO teaching
-							(teaching_id, student_id, musician_id, instrument_id, valid_start, valid_end) VALUES
-							(NULL, '".$nextTeachID."', '".$stu_id."', '".$mus_id."', '".$ins_id."', '".$validStart."', '".$validEnd."');";
+							(id, teaching_id, student_id, musician_id, instrument_id, valid_start, valid_end, read_level) VALUES
+							(NULL, '".$nextTeachID."', '".$stu_id."', '".$mus_id."', '".$ins_id."', '".$validStart."', '".$validEnd."', 'admin');";
 					}
 					$result_insert_musician = $this->db_connection->query($sql);
 					
@@ -161,6 +166,11 @@ class Teaching{
 					}else{
 						$this->errors[] =  "Error: " . $sql . "<br>" . mysqli_error($this->db_connection);
 					}
+
+					$sql = "INSERT INTO audit
+						(id, user_id, table_name, query, trans_time) VALUES
+						(NULL, '".$_SESSION['user_id']."', 'teaching', 'insert new teaching for student: ".$stu_id."', CURRENT_TIMESTAMP);";
+					$this->db_connection->query($sql);
 					
 					$this->db_connection->close();
 				} else {

@@ -17,7 +17,7 @@ if (isset($teaching)) {
 <datalist id="student_names">
 	<?php
 	$teaching->connect();
-	$sql = "SELECT name FROM student GROUP BY student_id";
+	$sql = "SELECT name, read_level FROM student GROUP BY student_id, read_level HAVING read_level LIKE '%secretary%'";
 	$result = $teaching->db_connection->query($sql);
 	if( mysqli_num_rows($result) != 0){
 		while($row = $result->fetch_array() ){ ?>
@@ -28,7 +28,7 @@ if (isset($teaching)) {
 </datalist>
 <datalist id="musician_names">
 	<?php
-	$sql = "SELECT name FROM musician GROUP BY musician_id";
+	$sql = "SELECT name, read_level FROM musician GROUP BY musician_id, read_level HAVING read_level LIKE '%secretary%'";
 	$result = $teaching->db_connection->query($sql);
 	if( mysqli_num_rows($result) != 0){
 		while($row = $result->fetch_array() ){ ?>
@@ -39,7 +39,7 @@ if (isset($teaching)) {
 </datalist>
 <datalist id="instrument_names">
 	<?php
-	$sql = "SELECT name FROM instrument GROUP BY instrument_id";
+	$sql = "SELECT name, trans_end FROM instrument WHERE trans_end IS NULL GROUP BY instrument_id";
 	$result = $teaching->db_connection->query($sql);
 	if( mysqli_num_rows($result) != 0){
 		while($row = $result->fetch_array() ){ ?>
@@ -116,38 +116,50 @@ if (isset($teaching)) {
 					if ($_SESSION['user_type']=="student") {
 						$sql = "SELECT DISTINCT t.id, t.teaching_id, t.student_id, t.musician_id, t.instrument_id,
 									i.name as ins_name, s.name as stu_name, m.name as mus_name,
-									t.valid_start, t.valid_end
+									t.valid_start, t.valid_end, t.read_level
 								FROM teaching t
 								LEFT JOIN instrument i ON i.instrument_id = t.instrument_id
 								LEFT JOIN student s ON s.student_id = t.student_id
 								LEFT JOIN musician m ON m.musician_id = t.musician_id
 								WHERE t.student_id = '".$_SESSION['user_id']."'
+								HAVING read_level LIKE '%student%'
 								ORDER BY s.name, t.valid_start ASC, t.teaching_id";
 					}elseif ($_SESSION['user_type']=="musician") {
 						$sql = "SELECT DISTINCT t.id, t.teaching_id, t.student_id, t.musician_id, t.instrument_id,
 									i.name as ins_name, s.name as stu_name, m.name as mus_name,
-									t.valid_start, t.valid_end
+									t.valid_start, t.valid_end, t.read_level
 								FROM teaching t
 								LEFT JOIN instrument i ON i.instrument_id = t.instrument_id
 								LEFT JOIN student s ON s.student_id = t.student_id
 								LEFT JOIN musician m ON m.musician_id = t.musician_id
 								WHERE t.musician_id = '".$_SESSION['user_id']."'
+								HAVING read_level LIKE '%student%'
 								ORDER BY s.name, t.valid_start ASC, t.teaching_id";
-					}else{
+					}elseif ($_SESSION['user_type']=="secretary") {
 						$sql = "SELECT DISTINCT t.id, t.teaching_id, t.student_id, t.musician_id, t.instrument_id,
 									i.name as ins_name, s.name as stu_name, m.name as mus_name,
-									t.valid_start, t.valid_end
+									t.valid_start, t.valid_end, t.read_level
 								FROM teaching t
 								LEFT JOIN instrument i ON i.instrument_id = t.instrument_id
 								LEFT JOIN student s ON s.student_id = t.student_id
 								LEFT JOIN musician m ON m.musician_id = t.musician_id
+								HAVING read_level LIKE '%secretary%'
+								ORDER BY s.name, t.valid_start ASC, t.teaching_id";
+					}else{
+						$sql = "SELECT DISTINCT t.id, t.teaching_id, t.student_id, t.musician_id, t.instrument_id,
+									i.name as ins_name, s.name as stu_name, m.name as mus_name,
+									t.valid_start, t.valid_end, t.read_level
+								FROM teaching t
+								LEFT JOIN instrument i ON i.instrument_id = t.instrument_id
+								LEFT JOIN student s ON s.student_id = t.student_id
+								LEFT JOIN musician m ON m.musician_id = t.musician_id
+								HAVING read_level LIKE '%admin%'
 								ORDER BY s.name, t.valid_start ASC, t.teaching_id";
 					}
 				}
 				echo $sql;
 				$result = $teaching->db_connection->query($sql);
 				$even = 1;
-				echo "\n\nfsdfsdfsdfasdfsdfasd: ".mysqli_num_rows($result)."\n";
 				if( mysqli_num_rows($result) != 0){
 					while($row = $result->fetch_array() ){
 						$sql = "SELECT * FROM teaching
@@ -177,7 +189,7 @@ if (isset($teaching)) {
 							<td><?php echo $row['ins_name']." (".$row['instrument_id'].")"; ?></td>
 							<td><?php echo $teaching->displayDate($row['valid_start'], "valid"); ?></td>
 							<td><?php echo $teaching->displayDate($row['valid_end'], "valid"); ?></td>
-							<?php if( mysqli_num_rows($result1) == 1 && $_SESSION['user_type']!="musician"){ ?>
+							<?php if( mysqli_num_rows($result1) == 1 && ($_SESSION['user_type']!="musician" && $_SESSION['user_type']!="student") ){ ?>
 							<td><a class="fancybox fancybox.iframe" href="teaching_info.php?tea_id=<?php echo $row['teaching_id']; ?>">Edit</a></td>
 							<?php }
 						}

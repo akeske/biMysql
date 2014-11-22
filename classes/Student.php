@@ -63,15 +63,16 @@ class Student{
 		}else{
 			$this->connect();
 			if (!$this->db_connection->connect_errno) {
+				$id = $this->db_connection->real_escape_string(strip_tags($_POST['id'], ENT_QUOTES));
 				$sql = "SELECT * FROM student
-						WHERE id = ".$_POST['id'];
+						WHERE id = ".$id;
 				$result = $this->db_connection->query($sql);
 				$row = $result->fetch_array();
 
 				if($_POST['validEnd']!=""){
 					$sql = "UPDATE student
 							SET read_level = 'admin', trans_end = '".$date."'
-							WHERE id = ".$_POST['id'];
+							WHERE id = ".$id;
 					$this->db_connection->query($sql);
 
 					$parts = explode ('/' , $_POST['validEnd']);
@@ -193,6 +194,11 @@ class Student{
 					}else{
 						$this->errors[] =  "Error: " . $sql . "<br>" . mysqli_error($this->db_connection);
 					}
+
+					$sql = "INSERT INTO audit
+						(id, user_id, table_name, query, trans_time) VALUES
+						(NULL, '".$_SESSION['user_id']."', 'student', 'inserted new student: ".$name."', CURRENT_TIMESTAMP);";
+					$this->db_connection->query($sql);
 					
 					$this->db_connection->close();
 	            } else {
