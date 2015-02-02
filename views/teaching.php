@@ -55,7 +55,7 @@ if (isset($teaching)) {
 <tr>
 <td>
 	<?php 
-	if ($_SESSION['user_type']!="student") { ?>
+	if ($_SESSION['user_type']=="admin" || $_SESSION['user_type']=="secretary") { ?>
 	<form method="post" action="index_tea.php" name="insertTeachingForm" class="pure-form">
 		<fieldset id="fieldset">
 		<legend>Insert new teaching</legend>

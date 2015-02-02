@@ -19,7 +19,7 @@ if (isset($instrument)) {
 <tr>
 <td>
 	<?php 
-	if ($_SESSION['user_type']!="student") { ?>
+	if ($_SESSION['user_type']=="admin" || $_SESSION['user_type']=="secretary") { ?>
 	<form method="post" action="index_ins.php" name="insertInstrument" class="pure-form">
 		<fieldset id="fieldset">
 		<legend>Insert new instrument</legend>

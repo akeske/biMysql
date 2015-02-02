@@ -19,7 +19,7 @@ if (isset($musician)) {
 <tr>
 <td>
 	<?php
-	if ($_SESSION['user_type']!="student") { ?>
+	if ($_SESSION['user_type']=="admin" || $_SESSION['user_type']=="secretary") { ?>
 	<form method="post" action="index_mus.php" name="insertMucisianForm" class="pure-form">
 		<fieldset id="fieldset">
 		<legend>Insert new musician</legend>

@@ -141,7 +141,7 @@ if ($_SESSION['user_type']=="admin" || $_SESSION['user_type']=="secretary") { ?>
 							ORDER BY valid_start, trans_end DESC";
 				}
 				if(isset($_GET['find']) && $_POST['findDateStudent']!=""){
-					$sql = $student->findStudentFormForm();
+					$sql = $student->findStudentForm();
 				}
 				echo $sql;
 				$result = $student->db_connection->query($sql);

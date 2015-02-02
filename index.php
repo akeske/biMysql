@@ -71,7 +71,7 @@
 						include("views/not_logged_in.php");
 					}
 					?>
-					<form method="post" action="" onClick="window.location.reload()">
+					<form method="post" action="index.php" onClick="">
 						<input type="button" value="Refresh page" class="pure-button pure-button-primary">
 					</form>
 				</td>

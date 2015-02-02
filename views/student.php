@@ -19,7 +19,7 @@ if (isset($student)) {
 <tr>
 <td>
 	<?php
-	if ($_SESSION['user_type']!="student") { ?>
+	if ($_SESSION['user_type']=="admin" || $_SESSION['user_type']=="secretary") { ?>
 	<form method="post" action="index_stu.php" name="insertStudentForm" class="pure-form">
 		<fieldset id="fieldset">
 		<legend>Insert new student</legend>
