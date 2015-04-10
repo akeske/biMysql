@@ -158,10 +158,10 @@ class Student{
 					$sql = "SELECT MAX(student_id) FROM student";
 					$result = $this->db_connection->query($sql);
 					if( mysqli_num_rows($result) == 0){
-					//	$new_stu_id = 1;
+						$new_stu_id = 1;
 					}else{
-					//	$row = $result->fetch_array();
-					//	$new_stu_id = $row[0] + 1;
+						$row = $result->fetch_array();
+						$new_stu_id = $row[0] + 1;
 					}
 
 	                $parts = explode ('/' , $_POST['validStart']);

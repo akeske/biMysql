@@ -161,12 +161,12 @@ class Musician{
 
 					$sql = "SELECT MAX(musician_id) FROM musician";
 					$result = $this->db_connection->query($sql);
-					//if( mysqli_num_rows($result) == 0){
-					//	$new_mus_id = 1;
-					//}else{
-					//	$row = $result->fetch_array();
-					//	$new_mus_id = $row[0] + 1;
-					//}
+					if( mysqli_num_rows($result) == 0){
+						$new_mus_id = 1;
+					}else{
+						$row = $result->fetch_array();
+						$new_mus_id = $row[0] + 1;
+					}
 
 	                $parts = explode ('/' , $validStart);
 						$day=$parts[2];
